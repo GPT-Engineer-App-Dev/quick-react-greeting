@@ -22,21 +22,25 @@ const Animals = () => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formState.id) {
-      updateAnimal.mutate(formState);
-    } else {
-      addAnimal.mutate(formState);
+    try {
+      if (formState.id) {
+        await updateAnimal.mutateAsync(formState);
+      } else {
+        await addAnimal.mutateAsync(formState);
+      }
+      setFormState({
+        id: null,
+        name: '',
+        type: '',
+        size: '',
+        country_of_origin: '',
+        average_lifetime: '',
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
-    setFormState({
-      id: null,
-      name: '',
-      type: '',
-      size: '',
-      country_of_origin: '',
-      average_lifetime: '',
-    });
   };
 
   const handleEdit = (animal) => {
