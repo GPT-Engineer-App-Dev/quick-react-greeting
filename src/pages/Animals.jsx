@@ -8,6 +8,7 @@ const Animals = () => {
   const updateAnimal = useUpdateAnimal();
   const deleteAnimal = useDeleteAnimal();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formState, setFormState] = useState({
     id: null,
     name: '',
@@ -24,6 +25,7 @@ const Animals = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       if (formState.id) {
         await updateAnimal.mutateAsync(formState);
@@ -40,6 +42,8 @@ const Animals = () => {
       });
     } catch (error) {
       console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -78,7 +82,7 @@ const Animals = () => {
             <FormLabel>Average Lifetime</FormLabel>
             <Input name="average_lifetime" value={formState.average_lifetime} onChange={handleChange} />
           </FormControl>
-          <Button type="submit" colorScheme="teal">
+          <Button type="submit" colorScheme="teal" isLoading={isSubmitting}>
             {formState.id ? 'Update Animal' : 'Add Animal'}
           </Button>
         </VStack>
